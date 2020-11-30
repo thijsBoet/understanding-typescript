@@ -30,3 +30,15 @@ const resultPhrase = "Result is: ";
 const result = add(+number1, +number2, printResult, resultPhrase)
 ```
 ### Reference types in TS
+* object   {age: 30}
+
+```typescript
+const person: {
+  // "{}" specifies its an object holding two properties (name, age) of type string and number
+  name: string,
+  age: number
+} = {
+  name: 'Matthijs',
+  age: 30
+}
+```
