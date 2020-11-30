@@ -31,8 +31,11 @@ const result = add(+number1, +number2, printResult, resultPhrase)
 ```
 ### Reference types in TS
 * object   {age: 30}
-* arrays   [1,2,3]
+* Arrays   [1,2,3]
 * typescript infers types used in objects/arrays, but they can also be specified.
+### New types in TS
+* Tuple  [2,'author'] array of fixed length and type
+* Enum - enum {NEW, OLD}
 ```typescript
 const person: {
   // "{}" specifies its an object holding properties (name, age, hobbies) of type string and number
@@ -40,6 +43,7 @@ const person: {
   age: number;
   hobbies: string[]; // any[] for array with any type
   role: [number, string] // tuple type
+  
 } = {
   name: 'Matthijs',
   age: 30,
@@ -48,12 +52,5 @@ const person: {
 }
 for (const hobby of person.hobbies) {
   console.log(hobby)
-}
-```
-### New types in TS
-* tuple  [2,'author'] array of fixed length and type
-```typescript
-{
-  role: [number, string] 
 }
 ```
