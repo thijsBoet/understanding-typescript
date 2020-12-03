@@ -37,6 +37,8 @@ const result = add(+number1, +number2, printResult, resultPhrase)
 * Tuple  [2,'author'] array of fixed length and type
 * enum - enum {NEW, OLD}
 * any - any kind
+* unknown - unknown type (a bit more restrictive then any, therefore better)
+* never - 
 ```typescript
 // enum names start with a Capital letter and it's convention to use all caps 
 enum Status {ADMIN, READ_ONLY, AUTHOR} (ADMIN=0, READ_ONLY=1, AUTHOR=2)
@@ -86,5 +88,54 @@ const printResult: Function = (num: number): void => console.log("Result: " + nu
 ```typescript
 let combineValues: (a:number, b:number) => number
 combineValues = add;
-
 ```
+* Using never is used when it never exits the function (like throw error)
+```typescript
+function generateError(message: string, code: number) {
+  throw {
+    message: message,
+    errorCode: code
+  }
+}
+
+const result = generateError('An error occurred!', 404)
+console.log(result)
+```
+## Typescript compiler
+### Watch Mode
+* We use watch mode to compile TS files on the fly to JS
+```javascript
+tsc app.ts -w
+```
+* To compile multiple files in an entire project folder
+```javascript
+tsc --init // only once, creates tsconfig.json file
+tsc -w // to watch folder
+```
+### Configuring tsconfig.json
+* tsconfig.js tells TS how TS should be compiled
+* We can add an "exclude" array to exclude certain files from compilation
+```json
+  },
+  "exclude" : [
+    "node_modules", // would be default without array
+    "analytics.ts",
+    "*.dev.ts" // every file that ends with .dev.ts
+  ]
+}
+```
+* An "include" array does the inverse and excludes all files that are not listed
+### Basic compilerOptions
+* "target" sets the targeted ECMA standard
+* "allowJs" allows JS files to be complicated
+* "checkJS" reports errors in JS files
+* "sourceMap" included the TS files in modern browsers for debugging
+* "outDir" sets to what folder the JS files should be compiled to
+* "rootDir" sets the root directory wherefrom TS files should be compiled like "./src"
+* "removeComments" remove comments (smaller files)
+* "noEmitOnError" files are not compiled when errors are thrown in TS
+
+### Code quality options
+* "noUnusedLocals" Reports on unused local variables
+* "noUnusedParameters" Reports on unused
+* "noImplicitReturns" Report error when not all code paths in function return a value.
