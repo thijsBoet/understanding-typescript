@@ -134,8 +134,136 @@ tsc -w // to watch folder
 * "rootDir" sets the root directory wherefrom TS files should be compiled like "./src"
 * "removeComments" remove comments (smaller files)
 * "noEmitOnError" files are not compiled when errors are thrown in TS
-
 ### Code quality options
 * "noUnusedLocals" Reports on unused local variables
 * "noUnusedParameters" Reports on unused
 * "noImplicitReturns" Report error when not all code paths in function return a value.
+## OOP refresher
+### Classes
+* Classes are blueprints for objects, they define how objects look like and which properties and methods they have.
+* An object is an instantiation of such a class (Might be an Product, User, Cart etc blueprint/class)
+* This way we can quickly replicate multiple objects with the same structure and methods
+* TS adds private, protected, static and types to classes
+```javascript
+class Department {
+  // defines property and type
+  name: string;
+  // sets the name field to the constructors argument
+  constructor(n: string) {
+    // must use this keyword for local class variables
+    this.name = n;
+  }
+  // indicates to TS that this should always refer to the Department class
+  describe(this: Department) {
+    console.log("Department: " + this.name);
+  }
+  // You can set properties and methods to private using the private keyword
+  // It is now only accessible from inside the class with addEmployee
+  private employees: string[] = [];
+  addEmployee(employee: string) {
+    this.employees.push(employee);
+  }
+  printEmployeeInformation() {
+    console.log(this.employees.length);
+    console.log(this.employees);
+  }
+}
+
+const accounting = new Department("Accounting");
+
+accounting.describe();
+accounting.addEmployee("Max");
+accounting.addEmployee("Manuel");
+accounting.printEmployeeInformation();
+```
+* Shorthand initialization of class
+```javascript
+class Person {
+  // We can add readonly to values that should not be changed
+  constructor(public readonly id: string, public name: string) {
+    
+  }
+}
+const karl = new Person('1', 'Karl')
+console.log(karl)
+```
+### Inheritance
+* We can inherit features from other classes using the extends keyword
+```javascript
+class ITDepartment extends Department {
+  // to add new arguments use the super keyword with the new argument
+  constructor(id: string, public admins: string[]) {
+    super(id);
+  }
+}
+
+const IT = new ITDepartment("2", ["mark", "jessie"]);
+console.log(IT)
+
+class HRDepartment extends Department {
+  private lastReport: string;
+  // We can use a get method to access private properties outside a class
+  get mostRecentReport() {
+    if (this.lastReport) {
+      return this.lastReport;
+    }
+    throw new Error("No report found.");
+  }
+  // We can use a set method to create private value outside a class
+  set mostRecentReport(value: string) {
+    this.addReport(value)
+  }
+  constructor(id: string, private reports: string[]) {
+    super(id);
+    this.lastReport = reports[0];
+  }
+  addEmployee(name: string) {
+    if (name === "max") {
+      return;
+    }
+    this.employees.push(name);
+  }
+  addReport(text: string) {
+    this.reports.push(text);
+    this.lastReport = text;
+  }
+  printReports() {
+    console.log(this.reports);
+  }
+}
+
+const HR = new HRDepartment('3', []);
+HR.addReport("Quarterly report on Mr. Willson's illicit hacking activities");
+HR.addEmployee("Susan")
+HR.printReports();
+HR.printEmployeeInformation();
+// Must set getter/setter function as a property not as a function
+HR.mostRecentReport = "Report on Elliot illicit hacking activities aka Mr. Robot";
+console.log(HR.mostRecentReport);
+```
+* We can create our own static methods/properties where we don't have to extend the department class
+```javascript
+class Department {
+  static currentYear = 2020
+  // We can't access static methods/properties with the this keyword within the class
+  console.log(Department.currentYear)
+  static createEmployee(name:string) {
+    return {name: name}
+  }
+}
+const newEmpoyee = Department.createEmployee("Ellen");
+console.log(currentYear, newEmpoyee)
+```
+* If We want to create a method on all inheriting classes we create an abstract class and method
+```javascript
+abstract class Department {
+  abstract describe(this.Department): void;
+}
+class HRDepartment extends Department {
+  // This abstracted class should be implemented on every extended class
+  describe(){
+    console.log('HR Department - ID ' + this.id)
+  }
+}
+```
+* But the base abstract "class Department" can now no longer be instantiated itself 
