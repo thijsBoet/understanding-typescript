@@ -127,7 +127,7 @@ tsc -w // to watch folder
 * An "include" array does the inverse and excludes all files that are not listed
 ### Basic compilerOptions
 * "target" sets the targeted ECMA standard
-* "allowJs" allows JS files to be complicated
+* "allowJs" allows JS files to be compiled
 * "checkJS" reports errors in JS files
 * "sourceMap" included the TS files in modern browsers for debugging
 * "outDir" sets to what folder the JS files should be compiled to
@@ -252,7 +252,7 @@ class Department {
   }
 }
 const newEmpoyee = Department.createEmployee("Ellen");
-console.log(currentYear, newEmpoyee)
+console.log(Department.currentYear, newEmpoyee)
 ```
 * If We want to create a method on all inheriting classes we create an abstract class and method
 ```javascript
@@ -267,3 +267,89 @@ class HRDepartment extends Department {
 }
 ```
 * But the base abstract "class Department" can now no longer be instantiated itself 
+## Interfaces
+* Interfaces describe the structure of an object
+* We create interfaces with the interface keyword which only exists in TS not regular javascript
+* We don't use this as a blueprint such as in a class, but as a custom type
+```typescript
+interface PersonInterface {
+  name: string;
+  age: number;
+}
+```
+* We can now type check an object
+```typescript
+let user1: PersonInterface
+
+user1 = {
+  name: "Matt",
+  age: 39,
+  greet(phrase: string) {
+    console.log(phrase + ' ' + this.name);
+  }
+}
+
+user1.greet('Hi there - I am')
+```
+* Interfaces are more specific/clearly (build for objects/classes) and types are more flexible
+* An interface can be used as a contract a class has to adhere to. Using the implements keyword
+```typescript
+interface Greetable {
+  name: string;
+  greet(phrase: string): void;
+}
+
+class PersonClass implements Greetable {
+  name: string;
+  age = 30;
+  constructor(name: string) {
+    this.name = name;
+  }
+  greet(phrase:string) {
+    console.log(phrase + " " + this.name);
+  }
+}
+
+let user1 = new PersonClass("Matt");
+user1.greet("hi there - I am")
+```
+* Interfaces are often used to share functionality amongst different classes
+* You can add the readonly modifier to an interface, but not public, private and abstract
+* We can even use inheritance to interfaces
+```typescript
+interface Named {
+  readonly name: string
+}
+
+interface Greetable extends Named{
+  greet(phrase: string): void;
+}
+```
+* We can use interfaces as an alternative to function types
+```typescript
+// type AddFn = (a: number, b: number) => number
+interface AddFn {
+  (a:number, b:number): number
+}
+let add: AddFn;
+
+add = (n1: number, n2: number) => n1 + n2;
+```
+* We can add optional properties using a question-mark
+```typescript
+interface Named {
+  readonly name: string
+  outputName?: string
+}
+```
+* We can also add optional properties to classes
+```typescript
+class Person {
+  name?: string
+}
+constructor(n?:string) {
+  if(n){
+    this.name = name
+  }
+}
+```
